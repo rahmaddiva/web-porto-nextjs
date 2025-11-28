@@ -1,10 +1,6 @@
 "use client";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
-import RotatingText from "./component/RotatingText";
-import ShinyText from "./component/ShinyText";
-import LogoLoop from "./component/LogoLoop";
-import Threads from "./component/Threads";
 
 import AnimatedContent from "./component/AnimatedContent";
 import TextType from "./component/TextType";
@@ -118,13 +114,7 @@ export default function Home() {
             left: 0,
             zIndex: 0,
           }}
-        >
-          <Threads
-            amplitude={2.5}
-            distance={0}
-            enableMouseInteraction={false}
-          />
-        </div>
+        ></div>
         <div className="w-full max-w-4xl mx-auto text-left relative z-10">
           <AnimatedContent
             direction="vertical"
