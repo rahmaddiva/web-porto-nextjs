@@ -1,3 +1,19 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Poppins:wght@400;600;700;900&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Oxanium:wght@200..800&display=swap");
+
+/* Tambahkan font-family ke utility Tailwind custom jika belum ada */
+.font-montserrat {
+  font-family: "Montserrat", Arial, Helvetica, sans-serif;
+}
+.font-poppins {
+  font-family: "Poppins", Arial, Helvetica, sans-serif;
+}
+
+.font-oxanium {
+  font-family: "Oxanium", Arial, Helvetica, sans-serif;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
