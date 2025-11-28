@@ -11,6 +11,7 @@ import TextType from "./component/TextType";
 import TiltedCard from "./component/TiltedCard";
 import CardSwap, { Card } from "./component/CardSwap";
 import dynamic from "next/dynamic";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const StaggeredMenu = dynamic(() => import("./component/StaggeredMenu"), {
   ssr: false,
@@ -514,6 +515,8 @@ export default function Home() {
       <footer className="w-full px-6 py-4 bg-[#18181b] text-center text-sm text-gray-400 font-poppins">
         &copy; {new Date().getFullYear()} Rahmad Diva S.M. All rights reserved.
       </footer>
+      {/* Vercel Speed Insights */}
+      <SpeedInsights />
     </div>
   );
 }
