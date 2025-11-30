@@ -8,6 +8,7 @@ import TiltedCard from "./component/TiltedCard";
 import CardSwap, { Card } from "./component/CardSwap";
 import dynamic from "next/dynamic";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import CurvedLoop from "./component/CurvedLoop";
 import {
   SiReact,
   SiReactivex,
@@ -58,21 +59,22 @@ export default function Home() {
   ];
   const [dateTime, setDateTime] = useState("");
   const [navOpen, setNavOpen] = useState(false);
+  // Default to 'dark' on server to avoid hydration mismatch.
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
   const smootherRef = useRef<any>(null);
 
   useEffect(() => {
     // DateTime updater
     const updateTime = () => {
       const now = new Date();
-      const dateStr =
-        now.toLocaleTimeString("en-US", { hour12: false }) +
-        " " +
-        now.getFullYear() +
-        "-" +
-        String(now.getMonth() + 1).padStart(2, "0") +
-        "-" +
-        String(now.getDate()).padStart(2, "0");
-      setDateTime(dateStr);
+      // Date in format: 30 Nov 2025 14:23:12
+      const datePart = now.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+      const timePart = now.toLocaleTimeString("en-GB", { hour12: false });
+      setDateTime(`${datePart} ${timePart}`);
     };
     updateTime();
     const interval = setInterval(updateTime, 1000);
@@ -121,6 +123,94 @@ export default function Home() {
     setNavOpen(false);
   };
 
+  // Persist theme and animate CSS variables for a smooth transition
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    localStorage.setItem("theme", theme);
+    // set data-theme attribute so CSS overrides that rely on the attribute still apply
+    try {
+      document.documentElement.setAttribute("data-theme", theme);
+    } catch (e) {
+      // ignore
+    }
+
+    // Animate the CSS variables that control colors for a smooth visual transition.
+    const targetBg = theme === "light" ? "#ffffff" : "#0a0a0a";
+    const targetFg = theme === "light" ? "#0f1724" : "#ededed";
+
+    try {
+      // Use GSAP if available to tween the CSS variables on the root element.
+      gsap.to(document.documentElement, {
+        duration: 0.45,
+        ease: "power2.out",
+        css: {
+          "--background": targetBg,
+          "--foreground": targetFg,
+        },
+      });
+    } catch (e) {
+      // Fallback: set inline variables immediately (no animation)
+      try {
+        document.documentElement.style.setProperty("--background", targetBg);
+        document.documentElement.style.setProperty("--foreground", targetFg);
+      } catch (err) {
+        // ignore
+      }
+    }
+  }, [theme]);
+
+  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+  // On first client mount, read stored preference or system preference
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const stored = localStorage.getItem("theme");
+    if (stored === "light" || stored === "dark") {
+      setTheme(stored as "light" | "dark");
+      return;
+    }
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: light)").matches
+    ) {
+      setTheme("light");
+    }
+  }, []);
+
+  // Theme button ref + micro-interaction animation on theme change
+  const themeBtnRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!themeBtnRef.current) return;
+    const btn = themeBtnRef.current;
+    const sun = btn.querySelector(".icon-sun") as SVGElement | null;
+    const moon = btn.querySelector(".icon-moon") as SVGElement | null;
+
+    try {
+      if (sun) {
+        gsap.to(sun, {
+          duration: 0.34,
+          opacity: theme === "dark" ? 1 : 0,
+          ease: "power1.out",
+        });
+      }
+      if (moon) {
+        gsap.to(moon, {
+          duration: 0.34,
+          opacity: theme === "dark" ? 0 : 1,
+          ease: "power1.out",
+        });
+      }
+      gsap.fromTo(
+        btn,
+        { scale: 0.92, rotation: theme === "dark" ? -8 : 8 },
+        { duration: 0.5, scale: 1, rotation: 0, ease: "elastic.out(1,0.6)" }
+      );
+    } catch (e) {
+      // ignore animation errors
+    }
+  }, [theme]);
+
   return (
     <div
       id="smooth-wrapper"
@@ -135,7 +225,123 @@ export default function Home() {
               href="#home"
               onClick={(e) => handleNavClick(e, "#home")}
               className="flex items-center gap-2 no-underline"
-            ></a>
+            >
+              {/* image */}
+              <img
+                src="assets/logo1.png"
+                alt="Diva logo"
+                className="w-8 h-8 object-contain"
+              />
+              <div className="flex flex-col leading-tight">
+                <span className="text-sm font-oxanium text-white">
+                  Tanah Laut, Kalimantan Selatan
+                </span>
+                <span className="text-xs text-gray-300">{dateTime}</span>
+              </div>
+            </a>
+          </div>
+
+          {/* Theme toggle button */}
+          <div className="hidden md:flex items-center gap-3">
+            <button
+              ref={themeBtnRef}
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              className="p-2 rounded-md bg-white/5 hover:bg-white/10 transition text-white relative w-9 h-9 flex items-center justify-center"
+            >
+              {/* Always render both icons and control opacity via GSAP so we can animate morph/crossfade */}
+              <svg
+                className="icon-sun absolute"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                style={{ opacity: theme === "dark" ? 1 : 0 }}
+              >
+                <path
+                  d="M12 4V2"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M12 22v-2"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M4 12H2"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M22 12h-2"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M5 5l-1.4-1.4"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M19.4 19.4L18 18"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M5 19l-1.4 1.4"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M19.4 4.6L18 6"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="3"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <svg
+                className="icon-moon absolute"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                style={{ opacity: theme === "dark" ? 0 : 1 }}
+              >
+                <path
+                  d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span className="sr-only">Toggle theme</span>
+            </button>
           </div>
 
           {/* Desktop menu: simple, icon-free, strong hover */}
@@ -219,7 +425,9 @@ export default function Home() {
                   pauseDuration={900}
                   showCursor={true}
                   cursorClassName="text-lime-400"
-                  textColors={["white"]}
+                  textColors={[
+                    theme === "dark" ? "white" : "var(--foreground)",
+                  ]}
                 />
               </AnimatedContent>
               <AnimatedContent
@@ -389,11 +597,18 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <br />
-        {/* Divider Section */}
-        <div className="w-full mt-7 flex justify-center">
-          <div className="h-px w-full max-w-4xl bg-white/10 my-0" />
-        </div>
+
+        {/* section curvedloop */}
+        <section className="w-full flex justify-center py-0 px-4 bg-black">
+          <div className="w-full max-w-4xl mx-auto">
+            <CurvedLoop
+              marqueeText="Web Developer • React.js • Next.js • Laravel • Codeigniter • Full Stack Developer • Responsive Design • Web Performance • UI/UX Enthusiast • Passionate Coder • Problem Solver • Lifelong Learner • Tech Enthusiast • Critical Thinking • "
+              speed={1.5}
+              curveAmount={0}
+              interactive={true}
+            />
+          </div>
+        </section>
         {/* Project Section */}
         <section
           id="project"
@@ -516,7 +731,6 @@ export default function Home() {
         <div className="w-full mt-11 flex justify-center">
           <div className="h-px w-full max-w-4xl bg-white/10 my-0" />
         </div>
-
         {/* Contact Section */}
         <section
           id="contact"
