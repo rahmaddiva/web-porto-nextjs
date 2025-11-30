@@ -11,7 +11,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import CurvedLoop from "./component/CurvedLoop";
 import {
   SiReact,
-  SiReactivex,
   SiPhp,
   SiExpress,
   SiPython,
@@ -25,6 +24,7 @@ import {
   SiFigma,
   SiGit,
   SiGo,
+  SiYoutube,
   SiLaravel,
   SiCodeigniter,
   SiGithub,
@@ -178,36 +178,64 @@ export default function Home() {
 
   // Theme button ref + micro-interaction animation on theme change
   const themeBtnRef = useRef<HTMLButtonElement | null>(null);
+  const themeBtnMobileRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (!themeBtnRef.current) return;
-    const btn = themeBtnRef.current;
-    const sun = btn.querySelector(".icon-sun") as SVGElement | null;
-    const moon = btn.querySelector(".icon-moon") as SVGElement | null;
+    // animate desktop button if present
+    if (themeBtnRef.current) {
+      const btn = themeBtnRef.current;
+      const sun = btn.querySelector(".icon-sun") as SVGElement | null;
+      const moon = btn.querySelector(".icon-moon") as SVGElement | null;
+      try {
+        if (sun)
+          gsap.to(sun, {
+            duration: 0.34,
+            opacity: theme === "dark" ? 1 : 0,
+            ease: "power1.out",
+          });
+        if (moon)
+          gsap.to(moon, {
+            duration: 0.34,
+            opacity: theme === "dark" ? 0 : 1,
+            ease: "power1.out",
+          });
+        gsap.fromTo(
+          btn,
+          { scale: 0.92, rotation: theme === "dark" ? -8 : 8 },
+          { duration: 0.5, scale: 1, rotation: 0, ease: "elastic.out(1,0.6)" }
+        );
+      } catch (e) {
+        // ignore
+      }
+    }
 
-    try {
-      if (sun) {
-        gsap.to(sun, {
-          duration: 0.34,
-          opacity: theme === "dark" ? 1 : 0,
-          ease: "power1.out",
-        });
+    // animate mobile button if present
+    if (themeBtnMobileRef.current) {
+      const mbtn = themeBtnMobileRef.current;
+      const msun = mbtn.querySelector(".icon-sun") as SVGElement | null;
+      const mmoon = mbtn.querySelector(".icon-moon") as SVGElement | null;
+      try {
+        if (msun)
+          gsap.to(msun, {
+            duration: 0.34,
+            opacity: theme === "dark" ? 1 : 0,
+            ease: "power1.out",
+          });
+        if (mmoon)
+          gsap.to(mmoon, {
+            duration: 0.34,
+            opacity: theme === "dark" ? 0 : 1,
+            ease: "power1.out",
+          });
+        gsap.fromTo(
+          mbtn,
+          { scale: 0.94, rotation: theme === "dark" ? -6 : 6 },
+          { duration: 0.45, scale: 1, rotation: 0, ease: "back.out(1.2)" }
+        );
+      } catch (e) {
+        // ignore
       }
-      if (moon) {
-        gsap.to(moon, {
-          duration: 0.34,
-          opacity: theme === "dark" ? 0 : 1,
-          ease: "power1.out",
-        });
-      }
-      gsap.fromTo(
-        btn,
-        { scale: 0.92, rotation: theme === "dark" ? -8 : 8 },
-        { duration: 0.5, scale: 1, rotation: 0, ease: "elastic.out(1,0.6)" }
-      );
-    } catch (e) {
-      // ignore animation errors
     }
   }, [theme]);
 
@@ -395,6 +423,80 @@ export default function Home() {
                 </li>
               ))}
             </ul>
+            <div className="mt-3 px-2">
+              <button
+                ref={themeBtnMobileRef}
+                onClick={toggleTheme}
+                aria-label="Toggle theme"
+                className="w-full flex items-center gap-3 justify-center px-4 py-2 rounded-md bg-white/5 hover:bg-white/10 text-white transition relative h-10"
+              >
+                <svg
+                  className="icon-sun absolute left-4"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  style={{ opacity: theme === "dark" ? 1 : 0 }}
+                >
+                  <path
+                    d="M12 4V2"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M12 22v-2"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M4 12H2"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M22 12h-2"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="3"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <svg
+                  className="icon-moon absolute left-4"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  style={{ opacity: theme === "dark" ? 0 : 1 }}
+                >
+                  <path
+                    d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span className="font-poppins">
+                  {theme === "dark" ? "Light mode" : "Dark mode"}
+                </span>
+              </button>
+            </div>
           </div>
         )}
       </nav>
@@ -799,6 +901,15 @@ export default function Home() {
                 aria-label="Facebook"
               >
                 <SiFacebook className="text-white hover:text-lime-400 text-2xl transition" />
+              </a>
+              {/* youtube */}
+              <a
+                href="https://www.youtube.com/@RahmadDiva"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
+              >
+                <SiYoutube className="text-white hover:text-lime-400 text-2xl transition" />
               </a>
             </div>
           </div>
