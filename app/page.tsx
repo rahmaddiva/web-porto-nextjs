@@ -272,39 +272,104 @@ export default function Home() {
       className="min-h-screen bg-black text-white flex flex-col relative"
     >
       {/* Sticky Navbar outside GSAP ScrollSmoother content for best compatibility */}
-      <nav className="sticky top-0 z-[100] w-full bg-black/75 backdrop-blur-md shadow-lg border-b border-white/6">
-        <div className="max-w-4xl mx-auto flex items-center justify-between px-4 py-3">
-          {/* Minimal logo (text + accent) */}
-          <div className="flex items-center gap-3">
+      <nav className="sticky top-0 z-[100] w-full">
+        {/* Glassmorphism background - theme aware */}
+        <div
+          className={`absolute inset-0 backdrop-blur-xl transition-colors duration-500 ${
+            theme === "dark"
+              ? "bg-gradient-to-r from-black/80 via-black/70 to-black/80"
+              : "bg-gradient-to-r from-white/90 via-white/85 to-white/90"
+          }`}
+        />
+        <div
+          className={`absolute inset-0 bg-gradient-to-b to-transparent transition-colors duration-500 ${
+            theme === "dark" ? "from-lime-400/5" : "from-lime-500/10"
+          }`}
+        />
+        <div
+          className={`absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent to-transparent transition-colors duration-500 ${
+            theme === "dark" ? "via-lime-400/30" : "via-lime-600/40"
+          }`}
+        />
+
+        <div className="relative max-w-5xl mx-auto flex items-center justify-between px-6 py-4">
+          {/* Logo section with glow effect */}
+          <div className="flex items-center gap-4">
             <a
               href="#home"
               onClick={(e) => handleNavClick(e, "#home")}
-              className="flex items-center gap-2 no-underline"
+              className="group flex items-center gap-3 no-underline"
             >
-              {/* image */}
-              <img
-                src="assets/logo1.png"
-                alt="Diva logo"
-                className="w-8 h-8 object-contain"
-              />
+              {/* Logo with animated ring */}
+              <div className="relative">
+                <div className="absolute -inset-1 bg-gradient-to-r from-lime-400/20 to-cyan-400/20 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <img
+                  src="assets/logo1.png"
+                  alt="Diva logo"
+                  className={`relative w-10 h-10 object-contain rounded-full ring-2 group-hover:ring-lime-500/50 transition-all duration-300 ${
+                    theme === "dark" ? "ring-white/10" : "ring-black/10"
+                  }`}
+                />
+              </div>
               <div className="flex flex-col leading-tight">
-                <span className="text-sm font-oxanium text-white">
-                  Tanah Laut, Kalimantan Selatan
+                <span
+                  className={`text-sm font-oxanium font-medium tracking-wide group-hover:text-lime-500 transition-colors duration-300 ${
+                    theme === "dark" ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  Rahmad Diva
                 </span>
-                <span className="text-xs text-gray-300">{dateTime}</span>
+                <span
+                  className={`text-[11px] font-poppins transition-colors duration-300 ${
+                    theme === "dark" ? "text-gray-400" : "text-gray-500"
+                  }`}
+                >
+                  {dateTime}
+                </span>
               </div>
             </a>
           </div>
 
-          {/* Theme toggle button */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-2">
+            {/* Nav Pills */}
+            <div
+              className={`flex items-center gap-1 backdrop-blur-sm rounded-full p-1.5 border transition-colors duration-500 ${
+                theme === "dark"
+                  ? "bg-white/5 border-white/10"
+                  : "bg-black/5 border-black/10 shadow-sm"
+              }`}
+            >
+              {menuItems.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  onClick={(e) => handleNavClick(e, item.href)}
+                  className={`group relative px-4 py-2 rounded-full text-sm font-poppins font-medium transition-all duration-300 ${
+                    theme === "dark"
+                      ? "text-gray-300 hover:text-white"
+                      : "text-gray-600 hover:text-gray-900"
+                  }`}
+                >
+                  <span className="relative z-10">{item.label}</span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-lime-400/80 to-lime-500/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <span className="absolute inset-0 bg-lime-400/20 rounded-full opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-300" />
+                </a>
+              ))}
+            </div>
+
+            {/* Theme toggle */}
             <button
               ref={themeBtnRef}
               onClick={toggleTheme}
               aria-label="Toggle theme"
-              className="p-2 rounded-md bg-white/5 hover:bg-white/10 transition text-white relative w-9 h-9 flex items-center justify-center"
+              className={`ml-3 p-2.5 rounded-full border hover:border-lime-500/50 transition-all duration-300 relative w-10 h-10 flex items-center justify-center group ${
+                theme === "dark"
+                  ? "bg-white/5 hover:bg-white/10 border-white/10 text-white"
+                  : "bg-black/5 hover:bg-black/10 border-black/10 text-gray-700"
+              }`}
             >
-              {/* Always render both icons and control opacity via GSAP so we can animate morph/crossfade */}
+              <div className="absolute inset-0 bg-lime-400/10 rounded-full opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-300" />
               <svg
                 className="icon-sun absolute"
                 width="18"
@@ -313,70 +378,18 @@ export default function Home() {
                 fill="none"
                 style={{ opacity: theme === "dark" ? 1 : 0 }}
               >
-                <path
-                  d="M12 4V2"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M12 22v-2"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M4 12H2"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M22 12h-2"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M5 5l-1.4-1.4"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M19.4 19.4L18 18"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M5 19l-1.4 1.4"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M19.4 4.6L18 6"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
                 <circle
                   cx="12"
                   cy="12"
-                  r="3"
+                  r="4"
                   stroke="currentColor"
-                  strokeWidth="1.6"
+                  strokeWidth="1.5"
+                />
+                <path
+                  d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
                   strokeLinecap="round"
-                  strokeLinejoin="round"
                 />
               </svg>
               <svg
@@ -390,7 +403,7 @@ export default function Home() {
                 <path
                   d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"
                   stroke="currentColor"
-                  strokeWidth="1.4"
+                  strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
@@ -399,130 +412,131 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Desktop menu: simple, icon-free, strong hover */}
-          <ul className="hidden md:flex gap-4 items-center">
-            {menuItems.map((item) => (
-              <li key={item.label}>
-                <a
-                  href={item.href}
-                  onClick={(e) => handleNavClick(e, item.href)}
-                  className="group relative text-white font-medium px-4 py-2 rounded-md transition-colors duration-200 hover:text-black hover:bg-lime-400/90"
-                >
-                  <span className="relative z-10">{item.label}</span>
-                  <span className="absolute left-2 right-2 -bottom-1 h-0.5 bg-lime-400 rounded-full scale-x-0 group-hover:scale-x-100 transform origin-left transition-transform duration-200" />
-                </a>
-              </li>
-            ))}
-          </ul>
-
           {/* Mobile button */}
           <div className="md:hidden">
             <button
-              className="text-white p-2 rounded-md focus:outline-none bg-black/60 hover:bg-white/10 transition"
+              className={`relative p-2.5 rounded-full border hover:border-lime-500/50 focus:outline-none transition-all duration-300 group ${
+                theme === "dark"
+                  ? "bg-white/5 border-white/10 text-white"
+                  : "bg-black/5 border-black/10 text-gray-700"
+              }`}
               onClick={() => setNavOpen((v) => !v)}
               aria-label="Open menu"
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <div className="absolute inset-0 bg-lime-400/10 rounded-full opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-300" />
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                className="relative"
+              >
                 <path
-                  d="M4 6h16M4 12h16M4 18h16"
+                  d={
+                    navOpen ? "M6 6l12 12M6 18L18 6" : "M4 6h16M4 12h16M4 18h16"
+                  }
                   stroke="currentColor"
-                  strokeWidth="1.6"
+                  strokeWidth="1.5"
                   strokeLinecap="round"
+                  className="transition-all duration-300"
                 />
               </svg>
             </button>
           </div>
         </div>
 
-        {/* Mobile menu dropdown (simpler) */}
+        {/* Mobile menu dropdown */}
         {navOpen && (
-          <div className="md:hidden bg-black/90 px-4 pb-4 pt-3 border-t border-white/6">
-            <ul className="flex flex-col gap-2">
-              {menuItems.map((item) => (
-                <li key={item.label}>
-                  <a
-                    href={item.href}
-                    onClick={(e) => handleNavClick(e, item.href)}
-                    className="block text-white font-medium px-4 py-2 rounded-md transition-colors duration-200 hover:bg-lime-400/90 hover:text-black"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-3 px-2">
-              <button
-                ref={themeBtnMobileRef}
-                onClick={toggleTheme}
-                aria-label="Toggle theme"
-                className="w-full flex items-center gap-3 justify-center px-4 py-2 rounded-md bg-white/5 hover:bg-white/10 text-white transition relative h-10"
+          <div className="relative md:hidden">
+            <div
+              className={`absolute inset-0 backdrop-blur-xl transition-colors duration-500 ${
+                theme === "dark" ? "bg-black/95" : "bg-white/95"
+              }`}
+            />
+            <div className="relative px-6 pb-6 pt-4">
+              <ul className="flex flex-col gap-2">
+                {menuItems.map((item, index) => (
+                  <li key={item.label}>
+                    <a
+                      href={item.href}
+                      onClick={(e) => handleNavClick(e, item.href)}
+                      className={`group flex items-center gap-3 font-poppins font-medium px-4 py-3 rounded-xl transition-all duration-300 hover:bg-lime-400/10 border border-transparent hover:border-lime-400/20 ${
+                        theme === "dark" ? "text-white" : "text-gray-800"
+                      }`}
+                      style={{ animationDelay: `${index * 50}ms` }}
+                    >
+                      <span className="w-1.5 h-1.5 bg-lime-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <div
+                className={`mt-4 pt-4 border-t transition-colors duration-500 ${
+                  theme === "dark" ? "border-white/10" : "border-black/10"
+                }`}
               >
-                <svg
-                  className="icon-sun absolute left-4"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  style={{ opacity: theme === "dark" ? 1 : 0 }}
+                <button
+                  ref={themeBtnMobileRef}
+                  onClick={toggleTheme}
+                  aria-label="Toggle theme"
+                  className={`w-full flex items-center gap-3 justify-center px-4 py-3 rounded-xl hover:bg-lime-400/10 border hover:border-lime-400/20 transition-all duration-300 relative ${
+                    theme === "dark"
+                      ? "bg-white/5 border-white/10 text-white"
+                      : "bg-black/5 border-black/10 text-gray-700"
+                  }`}
                 >
-                  <path
-                    d="M12 4V2"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M12 22v-2"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M4 12H2"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M22 12h-2"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="3"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <svg
-                  className="icon-moon absolute left-4"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  style={{ opacity: theme === "dark" ? 0 : 1 }}
-                >
-                  <path
-                    d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <span className="font-poppins">
-                  {theme === "dark" ? "Light mode" : "Dark mode"}
-                </span>
-              </button>
+                  <svg
+                    className="icon-sun"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    style={{
+                      opacity: theme === "dark" ? 1 : 0,
+                      position: "absolute",
+                      left: "1rem",
+                    }}
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="4"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                    />
+                    <path
+                      d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <svg
+                    className="icon-moon"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    style={{
+                      opacity: theme === "dark" ? 0 : 1,
+                      position: "absolute",
+                      left: "1rem",
+                    }}
+                  >
+                    <path
+                      d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <span className="font-poppins text-sm">
+                    {theme === "dark" ? "Switch to Light" : "Switch to Dark"}
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -769,30 +783,39 @@ export default function Home() {
               {[
                 {
                   year: "2024 - Present",
-                  role: "Full Stack Developer",
-                  company: "PT. Technology Solutions",
+                  role: "Full Stack Developer | Freelance",
+                  company: "Div Coding",
                   description:
-                    "Leading development of enterprise web applications using Next.js, Laravel, and cloud technologies. Implemented CI/CD pipelines and improved system performance by 40%.",
-                  tech: ["Next.js", "Laravel", "AWS", "Docker"],
+                    "Leading development of enterprise web applications using Next.js, Laravel, and etc. Implementing scalable solutions and optimizing performance for diverse clients.",
+                  tech: ["Next.js", "Laravel", "CI4", "Nginx"],
                   side: "left",
                 },
                 {
                   year: "2023 - 2024",
-                  role: "Frontend Developer",
-                  company: "Digital Agency XYZ",
+                  role: "Programmer | IT Support",
+                  company: "Dinas Perpustakaan dan Kearsipan Tanah Laut",
                   description:
-                    "Developed responsive and interactive user interfaces for various clients. Collaborated with design team to implement pixel-perfect designs with smooth animations.",
-                  tech: ["React.js", "TypeScript", "GSAP", "Tailwind CSS"],
+                    "Developed and maintained the library management system, enhancing user experience and system efficiency. Provided IT support and training to staff on new technologies.",
+                  tech: ["React.js", "CodeIgniter", "Laravel", "Nginx"],
                   side: "right",
                 },
                 {
                   year: "2022 - 2023",
-                  role: "Web Developer Intern",
-                  company: "Startup Innovation Hub",
+                  role: "Full Stack Developer | Mentor",
+                  company: "CV. Batuah Talenta Semesta",
                   description:
-                    "Built and maintained company website and internal tools. Gained hands-on experience with modern web technologies and agile development practices.",
+                    "Spearheaded development of web applications for clients in various industries. Mentored junior developers and conducted code reviews to ensure best practices.",
                   tech: ["PHP", "CodeIgniter", "MySQL", "Bootstrap"],
                   side: "left",
+                },
+                {
+                  year: "2022 - 2023",
+                  role: "Intern",
+                  company: "PT.Cipta Krida Bahari Logistics",
+                  description:
+                    "Assisted in developing and maintaining the company's logistics management system. Worked on enhancing user experience and optimizing backend processes.",
+                  tech: ["PHP", "CodeIgniter", "MySQL", "Bootstrap"],
+                  side: "right",
                 },
               ].map((exp, index) => (
                 <div
@@ -989,19 +1012,58 @@ export default function Home() {
         {/* Contact Section */}
         <section
           id="contact"
-          className="w-full py-20 px-4 bg-black flex items-center justify-center"
+          className={`w-full py-24 px-4 flex items-center justify-center relative overflow-hidden transition-colors duration-500 ${
+            theme === "dark" ? "bg-black" : "bg-gray-50"
+          }`}
         >
-          <div className="w-full max-w-4xl mx-auto text-center">
+          {/* Background decorations */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div
+              className={`absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl transition-colors duration-500 ${
+                theme === "dark" ? "bg-lime-400/5" : "bg-lime-400/10"
+              }`}
+            />
+            <div
+              className={`absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl transition-colors duration-500 ${
+                theme === "dark" ? "bg-cyan-400/5" : "bg-cyan-400/10"
+              }`}
+            />
+          </div>
+
+          <div className="w-full max-w-4xl mx-auto relative z-10">
             <AnimatedContent
               direction="vertical"
               distance={60}
               duration={1}
               ease="power3.out"
             >
-              <h2 className="font-oxanium text-3xl sm:text-4xl md:text-5xl mb-6 text-white">
-                Get In Touch .
-              </h2>
+              <div className="text-center mb-12">
+                <span className="inline-flex items-center gap-2 px-4 py-2 bg-lime-400/10 border border-lime-400/20 rounded-full mb-6">
+                  <span className="w-2 h-2 bg-lime-400 rounded-full animate-pulse" />
+                  <span className="text-lime-400 font-poppins text-sm font-medium">
+                    Available for work
+                  </span>
+                </span>
+                <h2
+                  className={`font-oxanium text-4xl sm:text-5xl md:text-6xl mb-4 transition-colors duration-500 ${
+                    theme === "dark" ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  Let's Work <span className="text-lime-500">Together</span>
+                </h2>
+                <p
+                  className={`font-poppins text-lg max-w-2xl mx-auto transition-colors duration-500 ${
+                    theme === "dark" ? "text-gray-400" : "text-gray-600"
+                  }`}
+                >
+                  Have a project in mind? Let's create something amazing
+                  together. I'm always excited to collaborate on innovative
+                  ideas.
+                </p>
+              </div>
             </AnimatedContent>
+
+            {/* Contact Cards */}
             <AnimatedContent
               direction="vertical"
               distance={40}
@@ -1009,12 +1071,138 @@ export default function Home() {
               delay={0.3}
               ease="power3.out"
             >
-              <p className="text-gray-300 font-poppins text-lg mb-8">
-                I'm always open to discussing new projects, creative ideas, or
-                opportunities to be part of your visions. Feel free to reach out
-                to me via email or connect with me on LinkedIn.
-              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                {/* Email Card */}
+                <a
+                  href="mailto:mahendradiva64@gmail.com"
+                  className={`group relative backdrop-blur-sm rounded-2xl p-6 hover:border-lime-400/30 transition-all duration-500 hover:shadow-[0_0_40px_rgba(163,230,53,0.15)] ${
+                    theme === "dark"
+                      ? "bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10"
+                      : "bg-white border border-gray-200 shadow-sm hover:shadow-lg"
+                  }`}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-lime-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
+                  <div className="relative flex items-center gap-4">
+                    <div
+                      className={`w-14 h-14 border rounded-xl flex items-center justify-center group-hover:bg-lime-400/20 transition-colors duration-300 ${
+                        theme === "dark"
+                          ? "bg-lime-400/10 border-lime-400/20"
+                          : "bg-lime-50 border-lime-200"
+                      }`}
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        className="text-lime-500"
+                      >
+                        <path
+                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p
+                        className={`font-poppins text-sm mb-1 transition-colors duration-500 ${
+                          theme === "dark" ? "text-gray-400" : "text-gray-500"
+                        }`}
+                      >
+                        Email me at
+                      </p>
+                      <p
+                        className={`font-poppins font-medium group-hover:text-lime-500 transition-colors duration-300 ${
+                          theme === "dark" ? "text-white" : "text-gray-900"
+                        }`}
+                      >
+                        mahendradiva64@gmail.com
+                      </p>
+                    </div>
+                  </div>
+                  <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      className="text-lime-400"
+                    >
+                      <path
+                        d="M7 17L17 7M17 7H7M17 7V17"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </a>
+
+                {/* Location Card */}
+                <div
+                  className={`group relative backdrop-blur-sm rounded-2xl p-6 transition-all duration-500 ${
+                    theme === "dark"
+                      ? "bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10"
+                      : "bg-white border border-gray-200 shadow-sm"
+                  }`}
+                >
+                  <div className="relative flex items-center gap-4">
+                    <div
+                      className={`w-14 h-14 border rounded-xl flex items-center justify-center transition-colors duration-500 ${
+                        theme === "dark"
+                          ? "bg-cyan-400/10 border-cyan-400/20"
+                          : "bg-cyan-50 border-cyan-200"
+                      }`}
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        className="text-cyan-500"
+                      >
+                        <path
+                          d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <circle
+                          cx="12"
+                          cy="9"
+                          r="2.5"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p
+                        className={`font-poppins text-sm mb-1 transition-colors duration-500 ${
+                          theme === "dark" ? "text-gray-400" : "text-gray-500"
+                        }`}
+                      >
+                        Based in
+                      </p>
+                      <p
+                        className={`font-poppins font-medium transition-colors duration-500 ${
+                          theme === "dark" ? "text-white" : "text-gray-900"
+                        }`}
+                      >
+                        Tanah Laut, Kalimantan Selatan
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </AnimatedContent>
+
+            {/* Social Links */}
             <AnimatedContent
               direction="horizontal"
               distance={80}
@@ -1022,56 +1210,257 @@ export default function Home() {
               delay={0.6}
               ease="power3.out"
             >
-              <a
-                href="mailto:mahendradiva64@gmail.com"
-                className="inline-block border border-white text-white font-poppins px-8 py-3 rounded-full hover:bg-white hover:text-black transition"
-              >
-                Contact Me
-              </a>
+              <div className="flex flex-col items-center">
+                <p
+                  className={`font-poppins text-sm mb-6 transition-colors duration-500 ${
+                    theme === "dark" ? "text-gray-500" : "text-gray-500"
+                  }`}
+                >
+                  Or find me on
+                </p>
+                <div className="flex items-center gap-4">
+                  {[
+                    {
+                      icon: SiLinkedin,
+                      href: "https://www.linkedin.com/in/diva-mahendra110902/",
+                      label: "LinkedIn",
+                      color:
+                        "hover:bg-blue-500/20 hover:border-blue-500/30 hover:text-blue-500",
+                    },
+                    {
+                      icon: SiGithub,
+                      href: "https://github.com/rahmaddiva",
+                      label: "GitHub",
+                      color:
+                        "hover:bg-gray-500/20 hover:border-gray-500/30 hover:text-gray-700",
+                    },
+                    {
+                      icon: SiInstagram,
+                      href: "https://instagram.com/divayeaaaaa",
+                      label: "Instagram",
+                      color:
+                        "hover:bg-pink-500/20 hover:border-pink-500/30 hover:text-pink-500",
+                    },
+                    {
+                      icon: SiFacebook,
+                      href: "https://facebook.com/hendra.kazami",
+                      label: "Facebook",
+                      color:
+                        "hover:bg-blue-600/20 hover:border-blue-600/30 hover:text-blue-600",
+                    },
+                    {
+                      icon: SiYoutube,
+                      href: "https://www.youtube.com/@RahmadDiva",
+                      label: "YouTube",
+                      color:
+                        "hover:bg-red-500/20 hover:border-red-500/30 hover:text-red-500",
+                    },
+                  ].map((social, index) => (
+                    <a
+                      key={index}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={social.label}
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                        social.color
+                      } ${
+                        theme === "dark"
+                          ? "bg-white/5 border border-white/10 text-gray-400"
+                          : "bg-gray-100 border border-gray-200 text-gray-500"
+                      }`}
+                    >
+                      <social.icon className="text-xl" />
+                    </a>
+                  ))}
+                </div>
+              </div>
             </AnimatedContent>
-            {/* Social Media Icons */}
-            <div className="flex justify-center gap-6 mt-8">
-              <a
-                href="https://www.linkedin.com/in/diva-mahendra110902/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-              >
-                <SiLinkedin className="text-white hover:text-lime-400 text-2xl transition" />
-              </a>
-              <a
-                href="https://instagram.com/divayeaaaaa"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-              >
-                <SiInstagram className="text-white hover:text-lime-400 text-2xl transition" />
-              </a>
-              <a
-                href="https://facebook.com/hendra.kazami"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook"
-              >
-                <SiFacebook className="text-white hover:text-lime-400 text-2xl transition" />
-              </a>
-              {/* youtube */}
-              <a
-                href="https://www.youtube.com/@RahmadDiva"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="YouTube"
-              >
-                <SiYoutube className="text-white hover:text-lime-400 text-2xl transition" />
-              </a>
-            </div>
           </div>
         </section>
-        <br />
+
         {/* Footer */}
-        <footer className="w-full px-6 py-4 bg-[#18181b] text-center text-sm text-gray-400 font-poppins">
-          &copy; {new Date().getFullYear()} Rahmad Diva S.M. All rights
-          reserved.
+        <footer
+          className={`w-full border-t transition-colors duration-500 ${
+            theme === "dark"
+              ? "bg-gradient-to-t from-black via-zinc-950 to-black border-white/5"
+              : "bg-gradient-to-t from-gray-100 via-gray-50 to-white border-gray-200"
+          }`}
+        >
+          <div className="max-w-5xl mx-auto px-6">
+            {/* Main Footer Content */}
+            <div className="py-12 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+              {/* Brand Column */}
+              <div className="md:col-span-1">
+                <div className="flex items-center gap-3 mb-4">
+                  <img
+                    src="assets/logo1.png"
+                    alt="Diva logo"
+                    className={`w-10 h-10 object-contain rounded-full ring-2 transition-all duration-500 ${
+                      theme === "dark" ? "ring-white/10" : "ring-gray-200"
+                    }`}
+                  />
+                  <div>
+                    <p
+                      className={`font-oxanium font-semibold transition-colors duration-500 ${
+                        theme === "dark" ? "text-white" : "text-gray-900"
+                      }`}
+                    >
+                      Rahmad Diva
+                    </p>
+                    <p
+                      className={`text-xs font-poppins transition-colors duration-500 ${
+                        theme === "dark" ? "text-gray-500" : "text-gray-500"
+                      }`}
+                    >
+                      Full Stack Developer
+                    </p>
+                  </div>
+                </div>
+                <p
+                  className={`font-poppins text-sm leading-relaxed transition-colors duration-500 ${
+                    theme === "dark" ? "text-gray-400" : "text-gray-600"
+                  }`}
+                >
+                  Crafting digital experiences with passion and precision. Let's
+                  build something amazing together.
+                </p>
+              </div>
+
+              {/* Quick Links */}
+              <div className="md:col-span-1">
+                <h4
+                  className={`font-oxanium font-medium mb-4 transition-colors duration-500 ${
+                    theme === "dark" ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  Quick Links
+                </h4>
+                <ul className="space-y-2">
+                  {menuItems.map((item) => (
+                    <li key={item.label}>
+                      <a
+                        href={item.href}
+                        onClick={(e) => handleNavClick(e, item.href)}
+                        className={`font-poppins text-sm hover:text-lime-500 transition-colors duration-300 flex items-center gap-2 group ${
+                          theme === "dark" ? "text-gray-400" : "text-gray-600"
+                        }`}
+                      >
+                        <span
+                          className={`w-1 h-1 rounded-full group-hover:bg-lime-500 transition-colors duration-300 ${
+                            theme === "dark" ? "bg-gray-600" : "bg-gray-400"
+                          }`}
+                        />
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Contact Info */}
+              <div className="md:col-span-1">
+                <h4
+                  className={`font-oxanium font-medium mb-4 transition-colors duration-500 ${
+                    theme === "dark" ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  Get In Touch
+                </h4>
+                <div className="space-y-3">
+                  <a
+                    href="mailto:mahendradiva64@gmail.com"
+                    className={`font-poppins text-sm hover:text-lime-500 transition-colors duration-300 flex items-center gap-3 ${
+                      theme === "dark" ? "text-gray-400" : "text-gray-600"
+                    }`}
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      className={
+                        theme === "dark" ? "text-gray-500" : "text-gray-400"
+                      }
+                    >
+                      <path
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    mahendradiva64@gmail.com
+                  </a>
+                  <p
+                    className={`font-poppins text-sm flex items-center gap-3 transition-colors duration-500 ${
+                      theme === "dark" ? "text-gray-400" : "text-gray-600"
+                    }`}
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      className={
+                        theme === "dark" ? "text-gray-500" : "text-gray-400"
+                      }
+                    >
+                      <path
+                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <circle
+                        cx="12"
+                        cy="9"
+                        r="2.5"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      />
+                    </svg>
+                    Tanah Laut, Kalimantan Selatan
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Bar */}
+            <div
+              className={`py-6 border-t flex flex-col md:flex-row items-center justify-between gap-4 transition-colors duration-500 ${
+                theme === "dark" ? "border-white/5" : "border-gray-200"
+              }`}
+            >
+              <p
+                className={`font-poppins text-sm transition-colors duration-500 ${
+                  theme === "dark" ? "text-gray-500" : "text-gray-500"
+                }`}
+              >
+                &copy; {new Date().getFullYear()} Rahmad Diva S.M. All rights
+                reserved.
+              </p>
+              <div
+                className={`flex items-center gap-2 font-poppins text-sm transition-colors duration-500 ${
+                  theme === "dark" ? "text-gray-500" : "text-gray-500"
+                }`}
+              >
+                <span>Built with</span>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="text-red-500"
+                >
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+                <span>using Next.js & Tailwind</span>
+              </div>
+            </div>
+          </div>
         </footer>
         {/* Vercel Speed Insights */}
         <SpeedInsights />
