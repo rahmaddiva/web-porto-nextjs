@@ -119,3 +119,63 @@ body,
   transition: background-color 0.38s ease, color 0.38s ease,
     border-color 0.38s ease, fill 0.38s ease;
 }
+
+/* Experience Timeline Animations */
+.exp-card {
+  will-change: transform, opacity;
+}
+
+.exp-card .group:hover {
+  transform: translateY(-4px);
+}
+
+/* Timeline dot pulse animation */
+@keyframes timeline-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(163, 230, 53, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(163, 230, 53, 0);
+  }
+}
+
+.exp-card:hover > div:first-child {
+  animation: timeline-pulse 1.5s ease-in-out infinite;
+}
+
+/* Gradient text for highlights */
+.gradient-text {
+  background: linear-gradient(135deg, #a3e635 0%, #22d3ee 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass morphism effect enhancement */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Light mode overrides for experience section */
+[data-theme="light"] .exp-card .bg-gradient-to-br {
+  background: linear-gradient(
+    to bottom right,
+    rgba(0, 0, 0, 0.02),
+    rgba(0, 0, 0, 0.01)
+  ) !important;
+}
+
+[data-theme="light"] .exp-card .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .exp-card .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+[data-theme="light"] .from-lime-400\/5 {
+  --tw-gradient-from: rgba(163, 230, 53, 0.08) !important;
+}
