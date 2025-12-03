@@ -168,7 +168,7 @@ export default function Home() {
     try {
       // Use GSAP if available to tween the CSS variables on the root element.
       gsap.to(document.documentElement, {
-        duration: 0.45,
+        duration: 0.5,
         ease: "power2.out",
         css: {
           "--background": targetBg,
@@ -306,21 +306,21 @@ export default function Home() {
                 <img
                   src="assets/logo1.png"
                   alt="Diva logo"
-                  className={`relative w-10 h-10 object-contain rounded-full ring-2 group-hover:ring-lime-500/50 transition-all duration-300 ${
+                  className={`relative w-10 h-10 object-contain rounded-full ring-2 group-hover:ring-lime-500/50 transition-all duration-500 ${
                     theme === "dark" ? "ring-white/10" : "ring-black/10"
                   }`}
                 />
               </div>
               <div className="flex flex-col leading-tight">
                 <span
-                  className={`text-sm font-oxanium font-medium tracking-wide group-hover:text-lime-500 transition-colors duration-300 ${
+                  className={`text-sm font-oxanium font-medium tracking-wide group-hover:text-lime-500 transition-colors duration-500 ${
                     theme === "dark" ? "text-white" : "text-gray-900"
                   }`}
                 >
                   Rahmad Diva
                 </span>
                 <span
-                  className={`text-[11px] font-poppins transition-colors duration-300 ${
+                  className={`text-[11px] font-poppins transition-colors duration-500 ${
                     theme === "dark" ? "text-gray-400" : "text-gray-500"
                   }`}
                 >
@@ -345,7 +345,7 @@ export default function Home() {
                   key={item.label}
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
-                  className={`group relative px-4 py-2 rounded-full text-sm font-poppins font-medium transition-all duration-300 ${
+                  className={`group relative px-4 py-2 rounded-full text-sm font-poppins font-medium transition-all duration-500 ${
                     theme === "dark"
                       ? "text-gray-300 hover:text-white"
                       : "text-gray-600 hover:text-gray-900"
@@ -363,7 +363,7 @@ export default function Home() {
               ref={themeBtnRef}
               onClick={toggleTheme}
               aria-label="Toggle theme"
-              className={`ml-3 p-2.5 rounded-full border hover:border-lime-500/50 transition-all duration-300 relative w-10 h-10 flex items-center justify-center group ${
+              className={`ml-3 p-2.5 rounded-full border hover:border-lime-500/50 transition-all duration-500 relative w-10 h-10 flex items-center justify-center group ${
                 theme === "dark"
                   ? "bg-white/5 hover:bg-white/10 border-white/10 text-white"
                   : "bg-black/5 hover:bg-black/10 border-black/10 text-gray-700"
@@ -415,7 +415,7 @@ export default function Home() {
           {/* Mobile button */}
           <div className="md:hidden">
             <button
-              className={`relative p-2.5 rounded-full border hover:border-lime-500/50 focus:outline-none transition-all duration-300 group ${
+              className={`relative p-2.5 rounded-full border hover:border-lime-500/50 focus:outline-none transition-all duration-500 group ${
                 theme === "dark"
                   ? "bg-white/5 border-white/10 text-white"
                   : "bg-black/5 border-black/10 text-gray-700"
@@ -460,7 +460,7 @@ export default function Home() {
                     <a
                       href={item.href}
                       onClick={(e) => handleNavClick(e, item.href)}
-                      className={`group flex items-center gap-3 font-poppins font-medium px-4 py-3 rounded-xl transition-all duration-300 hover:bg-lime-400/10 border border-transparent hover:border-lime-400/20 ${
+                      className={`group flex items-center gap-3 font-poppins font-medium px-4 py-3 rounded-xl transition-all duration-500 hover:bg-lime-400/10 border border-transparent hover:border-lime-400/20 ${
                         theme === "dark" ? "text-white" : "text-gray-800"
                       }`}
                       style={{ animationDelay: `${index * 50}ms` }}
@@ -480,7 +480,7 @@ export default function Home() {
                   ref={themeBtnMobileRef}
                   onClick={toggleTheme}
                   aria-label="Toggle theme"
-                  className={`w-full flex items-center gap-3 justify-center px-4 py-3 rounded-xl hover:bg-lime-400/10 border hover:border-lime-400/20 transition-all duration-300 relative ${
+                  className={`w-full flex items-center gap-3 justify-center px-4 py-3 rounded-xl hover:bg-lime-400/10 border hover:border-lime-400/20 transition-all duration-500 relative ${
                     theme === "dark"
                       ? "bg-white/5 border-white/10 text-white"
                       : "bg-black/5 border-black/10 text-gray-700"
@@ -848,7 +848,7 @@ export default function Home() {
                       </div>
 
                       {/* Role & Company */}
-                      <h3 className="relative font-oxanium text-xl md:text-2xl text-white mb-1 group-hover:text-lime-400 transition-colors duration-300">
+                      <h3 className="relative font-oxanium text-xl md:text-2xl text-white mb-1 group-hover:text-lime-400 transition-colors duration-500">
                         {exp.role}
                       </h3>
                       <p className="relative text-gray-400 font-poppins text-sm mb-4">
@@ -865,7 +865,7 @@ export default function Home() {
                         {exp.tech.map((t, i) => (
                           <span
                             key={i}
-                            className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-poppins text-gray-300 hover:bg-lime-400/10 hover:border-lime-400/30 hover:text-lime-400 transition-all duration-300"
+                            className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-poppins text-gray-300 hover:bg-lime-400/10 hover:border-lime-400/30 hover:text-lime-400 transition-all duration-500"
                           >
                             {t}
                           </span>
@@ -1084,7 +1084,7 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-br from-lime-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
                   <div className="relative flex items-center gap-4">
                     <div
-                      className={`w-14 h-14 border rounded-xl flex items-center justify-center group-hover:bg-lime-400/20 transition-colors duration-300 ${
+                      className={`w-14 h-14 border rounded-xl flex items-center justify-center group-hover:bg-lime-400/20 transition-colors duration-500 ${
                         theme === "dark"
                           ? "bg-lime-400/10 border-lime-400/20"
                           : "bg-lime-50 border-lime-200"
@@ -1115,7 +1115,7 @@ export default function Home() {
                         Email me at
                       </p>
                       <p
-                        className={`font-poppins font-medium group-hover:text-lime-500 transition-colors duration-300 ${
+                        className={`font-poppins font-medium group-hover:text-lime-500 transition-colors duration-500 ${
                           theme === "dark" ? "text-white" : "text-gray-900"
                         }`}
                       >
@@ -1262,7 +1262,7 @@ export default function Home() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={social.label}
-                      className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500 ${
                         social.color
                       } ${
                         theme === "dark"
@@ -1342,12 +1342,12 @@ export default function Home() {
                       <a
                         href={item.href}
                         onClick={(e) => handleNavClick(e, item.href)}
-                        className={`font-poppins text-sm hover:text-lime-500 transition-colors duration-300 flex items-center gap-2 group ${
+                        className={`font-poppins text-sm hover:text-lime-500 transition-colors duration-500 flex items-center gap-2 group ${
                           theme === "dark" ? "text-gray-400" : "text-gray-600"
                         }`}
                       >
                         <span
-                          className={`w-1 h-1 rounded-full group-hover:bg-lime-500 transition-colors duration-300 ${
+                          className={`w-1 h-1 rounded-full group-hover:bg-lime-500 transition-colors duration-500 ${
                             theme === "dark" ? "bg-gray-600" : "bg-gray-400"
                           }`}
                         />
@@ -1370,7 +1370,7 @@ export default function Home() {
                 <div className="space-y-3">
                   <a
                     href="mailto:mahendradiva64@gmail.com"
-                    className={`font-poppins text-sm hover:text-lime-500 transition-colors duration-300 flex items-center gap-3 ${
+                    className={`font-poppins text-sm hover:text-lime-500 transition-colors duration-500 flex items-center gap-3 ${
                       theme === "dark" ? "text-gray-400" : "text-gray-600"
                     }`}
                   >
