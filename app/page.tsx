@@ -9,6 +9,7 @@ import CardSwap, { Card } from "./component/CardSwap";
 import dynamic from "next/dynamic";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import CurvedLoop from "./component/CurvedLoop";
+import FakeClients from "./component/FakeClients";
 import {
   SiReact,
   SiPhp,
@@ -742,7 +743,7 @@ export default function Home() {
         </section>
 
         {/* section curvedloop */}
-        <section className="w-full flex justify-center py-0 px-4 bg-black">
+        {/* <section className="w-full flex justify-center py-0 px-4 bg-black">
           <div className="w-full max-w-4xl mx-auto">
             <CurvedLoop
               marqueeText="Web Developer • React.js • Next.js • Laravel • Codeigniter • Full Stack Developer • Responsive Design • Web Performance • UI/UX Enthusiast • Passionate Coder • Problem Solver • Lifelong Learner • Tech Enthusiast • Critical Thinking • "
@@ -751,7 +752,10 @@ export default function Home() {
               interactive={true}
             />
           </div>
-        </section>
+        </section> */}
+
+        {/* Fake Clients (mock) */}
+        <FakeClients theme={theme} />
 
         {/* Experience Section */}
         <section
@@ -996,6 +1000,23 @@ export default function Home() {
                     <img
                       src="/assets/projekbawaslu.png"
                       alt="API Service"
+                      className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
+                    />
+                  </div>
+                </Card>
+                <Card>
+                  <div className="w-full h-full relative border border-white/30 rounded-xl shadow-md">
+                    <div className="absolute top-0 left-0 w-full bg-black/60 p-4 rounded-t-xl z-10">
+                      <h3 className="font-oxanium text-xl text-white mb-1">
+                        DP3AP2KB Kab. Tanah Laut
+                      </h3>
+                      <p className="text-sm text-gray-300">
+                        Codeigniter, MySql, Bootstrap, Jquery
+                      </p>
+                    </div>
+                    <img
+                      src="/assets/dp3ap2kb.png"
+                      alt="DP3AP2KB Kab. Tanah Laut"
                       className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
                     />
                   </div>
