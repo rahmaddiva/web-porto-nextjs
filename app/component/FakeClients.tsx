@@ -1,12 +1,13 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
+import { useSite } from "../context/SiteContext";
 
 type Props = {
-  theme: "dark" | "light";
   pauseOnHover?: boolean;
 };
 
-export default function FakeClients({ theme, pauseOnHover = true }: Props) {
+export default function FakeClients({ pauseOnHover = true }: Props) {
+  const { theme } = useSite();
   const testimonials = [
     {
       id: 1,
@@ -24,24 +25,17 @@ export default function FakeClients({ theme, pauseOnHover = true }: Props) {
     },
     {
       id: 3,
-      name: "Citra Lestari",
-      role: "Founder, Luma Studio",
+      name: "Khairul Anwar Hafizd",
+      role: "CEO Batuah Talenta Semesta",
       quote:
-        "Reliable, detail-oriented, and creative — delivered a polished UI and intuitive UX on time.",
+        "Rahmad consistently brings practical solutions, clean execution, and strong ownership to every project we work on.",
     },
     {
       id: 4,
-      name: "Dedy Prasetya",
-      role: "Head of Ops, Nebula",
+      name: "Abdul Ghani Zaen",
+      role: "Teamates Batuah Talenta Semesta",
       quote:
-        "Great collaborator and problem solver — helped us navigate tricky integration challenges.",
-    },
-    {
-      id: 5,
-      name: "Erna Kusuma",
-      role: "Marketing Lead, Vertex",
-      quote:
-        "Professional and communicative. The end result boosted our conversion rates noticeably.",
+        "Working with Rahmad is smooth and productive - he communicates clearly, solves problems fast, and delivers reliable results.",
     },
   ];
 
