@@ -1,79 +1,101 @@
 "use client";
-import AnimatedContent from "../component/AnimatedContent";
-import CardSwap, { Card } from "../component/CardSwap";
-import { SiGithub } from "react-icons/si";
+import GalleryShape from "../component/GalleryShape";
+import { useEffect, useState } from "react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Reveal from "../component/Reveal";
+
+interface Repo {
+  name: string;
+  url: string;
+  description: string | null;
+  language: string | null;
+  stars: number;
+  updated: string;
+}
+
+const FALLBACK: Repo[] = [
+  { name: "SIMPUN DISPUSIP", url: "https://github.com/rahmaddiva", description: "Library system — CodeIgniter · MySQL · Bootstrap", language: null, stars: 0, updated: "2024" },
+  { name: "E-Agenda Bupati", url: "https://github.com/rahmaddiva", description: "Government agenda — CodeIgniter · Bootstrap · MySQL", language: null, stars: 0, updated: "2023" },
+  { name: "SABAR-BAWASLU", url: "https://github.com/rahmaddiva", description: "Reporting system — CodeIgniter · MySQL · Bootstrap", language: null, stars: 0, updated: "2023" },
+  { name: "DP3AP2KB Kab. Tanah Laut", url: "https://github.com/rahmaddiva", description: "Agency website — CodeIgniter · MySQL · jQuery", language: null, stars: 0, updated: "2022" },
+  { name: "erdekatala", url: "https://github.com/rahmaddiva/erdekatala", description: "JavaScript project", language: "JavaScript", stars: 0, updated: "2026" },
+  { name: "lafagen", url: "https://github.com/rahmaddiva/lafagen", description: "Vue project", language: "Vue", stars: 0, updated: "2026" },
+];
 
 export default function ProjectSection() {
+  const [repos, setRepos] = useState<Repo[]>(FALLBACK);
+  const [live, setLive] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/repos")
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((data: Repo[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setRepos(data);
+          setLive(true);
+          requestAnimationFrame(() => ScrollTrigger.refresh());
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
-    <section id="project" className="w-full py-20 px-4 mt-8 bg-black flex items-center justify-center">
-      <div className="w-full max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start md:items-center">
-        <div className="md:col-span-1 col-span-1 flex flex-col justify-center">
-          <AnimatedContent direction="vertical" distance={60} duration={1} ease="power3.out">
-            <h2 className="font-oxanium text-3xl sm:text-4xl md:text-5xl mb-6 text-white">
-              My Projects .
-            </h2>
-          </AnimatedContent>
-          <AnimatedContent direction="vertical" distance={40} duration={1} delay={0.3} ease="power3.out">
-            <p className="text-gray-300 font-poppins text-sm mb-8 max-w-2xl">
-              Here are some of the projects I&apos;ve worked on, showcasing my skills in web development. Each project reflects my commitment to creating high-quality, user-friendly digital experiences.
-            </p>
-          </AnimatedContent>
-          <AnimatedContent direction="horizontal" distance={80} duration={0.8} delay={0.6} ease="power3.out">
-            <a
-              href="https://github.com/rahmaddiva"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex w-full border-1 border-white/40 text-white font-poppins px-6 py-2 rounded-full hover:bg-black/40 hover:text-white transition items-center justify-start text-left"
-            >
-              <SiGithub className="text-xl mr-2" />
-              View My GitHub
-            </a>
-          </AnimatedContent>
+    <section id="project" className="relative w-full py-24 md:py-32 px-6 overflow-hidden">
+      <GalleryShape name="arrow" accent className="top-24 left-[3%] w-24 h-24 opacity-80" />
+      <div className="max-w-4xl mx-auto">
+        <Reveal>
+          <p className="font-display text-sm tracking-[0.25em] uppercase text-muted mb-6">
+            03 — Projects{live && <span className="normal-case tracking-normal"> · synced from GitHub</span>}
+          </p>
+        </Reveal>
+
+        <div>
+          {repos.map((p, i) => (
+            <Reveal key={p.name} delay={Math.min(i * 0.08, 0.2)}>
+              <a
+                href={p.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group grid grid-cols-[1fr_auto] items-baseline gap-4 py-7 border-t border-line last:border-b"
+              >
+                <div>
+                  <h3 className="font-display font-semibold tracking-tight text-2xl md:text-4xl group-hover:text-accent transition-colors duration-200">
+                    {p.name}
+                  </h3>
+                  <p className="text-muted mt-1">
+                    {p.description ?? "No description"}
+                    {p.language && <span> · {p.language}</span>}
+                  </p>
+                </div>
+                <p className="font-display text-sm text-muted tabular-nums">
+                  {yearOf(p.updated)}
+                </p>
+              </a>
+            </Reveal>
+          ))}
         </div>
-        <div
-          className="md:col-span-1 col-span-1 flex justify-end items-center relative mt-8 md:mt-0 w-full max-w-full md:max-w-xs"
-          style={{ minHeight: "320px", height: "100%" }}
-        >
-          <CardSwap cardDistance={35} verticalDistance={45} delay={3400} pauseOnHover={false} skewAmount={12}>
-            <Card>
-              <div className="w-full h-full relative border border-white/30 rounded-xl shadow-md">
-                <div className="absolute top-0 left-0 w-full bg-black/60 p-4 rounded-t-xl z-10">
-                  <h3 className="font-oxanium text-xl text-white mb-1">SIMPUN DISPUSIP</h3>
-                  <p className="text-sm text-gray-300">Codeigniter, MySql, Bootstrap</p>
-                </div>
-                <img src="/assets/projekdispusip.png" alt="SIM PUSIP" className="absolute top-0 left-0 w-full h-full object-cover rounded-xl" />
-              </div>
-            </Card>
-            <Card>
-              <div className="w-full h-full relative border border-white/30 rounded-xl shadow-md">
-                <div className="absolute top-0 left-0 w-full bg-black/60 p-4 rounded-t-xl z-10">
-                  <h3 className="font-oxanium text-xl text-white mb-1">E-Agenda Bupati</h3>
-                  <p className="text-sm text-gray-300">Codeigniter, Bootstrap, MySQL</p>
-                </div>
-                <img src="/assets/projeksetda.png" alt="E-Agenda" className="absolute top-0 left-0 w-full h-full object-cover rounded-xl" />
-              </div>
-            </Card>
-            <Card>
-              <div className="w-full h-full relative border border-white/30 rounded-xl shadow-md">
-                <div className="absolute top-0 left-0 w-full bg-black/60 p-4 rounded-t-xl z-10">
-                  <h3 className="font-oxanium text-xl text-white mb-1">SABAR-BAWASLU</h3>
-                  <p className="text-sm text-gray-300">Codeigniter, MySql, Bootstrap</p>
-                </div>
-                <img src="/assets/projekbawaslu.png" alt="SABAR BAWASLU" className="absolute top-0 left-0 w-full h-full object-cover rounded-xl" />
-              </div>
-            </Card>
-            <Card>
-              <div className="w-full h-full relative border border-white/30 rounded-xl shadow-md">
-                <div className="absolute top-0 left-0 w-full bg-black/60 p-4 rounded-t-xl z-10">
-                  <h3 className="font-oxanium text-xl text-white mb-1">DP3AP2KB Kab. Tanah Laut</h3>
-                  <p className="text-sm text-gray-300">Codeigniter, MySql, Bootstrap, Jquery</p>
-                </div>
-                <img src="/assets/dp3ap2kb.png" alt="DP3AP2KB" className="absolute top-0 left-0 w-full h-full object-cover rounded-xl" />
-              </div>
-            </Card>
-          </CardSwap>
-        </div>
+
+        <Reveal delay={0.1}>
+          <a
+            href="https://github.com/rahmaddiva"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-baseline gap-2 font-display font-medium text-lg mt-12"
+          >
+            <span className="underline underline-offset-8 decoration-line group-hover:decoration-accent transition-colors duration-200">
+              More on GitHub
+            </span>
+            <span aria-hidden="true" className="text-accent transition-transform duration-200 group-hover:translate-x-1">
+              →
+            </span>
+          </a>
+        </Reveal>
       </div>
     </section>
   );
+}
+
+function yearOf(updated: string) {
+  const d = new Date(updated);
+  return Number.isNaN(d.getTime()) ? updated : String(d.getFullYear());
 }

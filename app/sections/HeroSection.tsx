@@ -1,49 +1,50 @@
 "use client";
-import AnimatedContent from "../component/AnimatedContent";
-import TextType from "../component/TextType";
+import GalleryShape from "../component/GalleryShape";
+import Reveal from "../component/Reveal";
 import { useSite } from "../context/SiteContext";
 
 export default function HeroSection() {
-  const { theme, handleNavClick } = useSite();
+  const { handleNavClick } = useSite();
 
   return (
-    <section
-      id="home"
-      className="flex-1 mt-11 flex items-center justify-center px-4 relative overflow-hidden"
-    >
-      <div className="w-full max-w-4xl mx-auto text-left relative z-10 flex flex-col">
-        <div className="flex flex-col" style={{ minHeight: "220px" }}>
-          <AnimatedContent direction="vertical" distance={60} duration={1} ease="power3.out">
-            <TextType
-              as="h1"
-              text={[
-                "Execution over theory. Always.",
-                "Performance first.Excuses never.",
-                "Turning complexity into leverage.",
-              ]}
-              className="font-oxanium text-3xl sm:text-5xl md:text-6xl leading-tight mb-6"
-              typingSpeed={60}
-              pauseDuration={900}
-              showCursor={true}
-              cursorClassName="text-lime-400"
-              textColors={[theme === "dark" ? "white" : "var(--foreground)"]}
-            />
-          </AnimatedContent>
-          <AnimatedContent direction="vertical" distance={40} duration={1} delay={0.3} ease="power3.out">
-            <p className="text-white font-poppins text-lg max-w-xl mb-8">
-              I&apos;m a passionate web developer specializing in creating dynamic and responsive websites using modern technologies like React, Next.js, Laravel, Codeigniter etc, With a keen eye for design and a commitment to performance, I build digital experiences that not only look great but also function seamlessly across all devices. Let&apos;s bring your ideas to life on the web!
-            </p>
-          </AnimatedContent>
-        </div>
-        <AnimatedContent direction="horizontal" distance={80} duration={0.8} delay={0.6} ease="power3.out">
+    <section id="home" className="relative flex-1 flex items-center px-6 pt-20 pb-28 md:pt-28 md:pb-36 overflow-hidden">
+      <GalleryShape name="asterisk" accent className="top-20 right-[8%] w-28 h-28" />
+      <div className="relative z-10 w-full max-w-4xl mx-auto">
+        <Reveal>
+          <p className="font-display text-sm tracking-[0.25em] uppercase text-muted mb-8">
+            Rahmad Diva — Full Stack Developer
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.1}>
+          <h1 className="font-display font-bold tracking-[-0.04em] leading-[0.92] text-[clamp(3.5rem,12vw,9rem)] mb-10">
+            Build fast.
+            <br />
+            Ship clean<span className="text-accent">.</span>
+          </h1>
+        </Reveal>
+
+        <Reveal delay={0.2}>
+          <p className="text-muted text-lg md:text-xl leading-relaxed max-w-xl mb-12">
+            React, Next.js, Laravel — web experiences that are fast,
+            responsive, and accessible. From Tanah Laut, Kalimantan Selatan.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.3}>
           <a
-            href="#about"
-            onClick={(e) => handleNavClick(e, "#about")}
-            className="inline-block border border-white text-white font-poppins px-8 py-3 rounded-full hover:bg-white hover:text-black transition"
+            href="#project"
+            onClick={(e) => handleNavClick(e, "#project")}
+            className="group inline-flex items-baseline gap-2 font-display font-medium text-lg"
           >
-            Know me better
+            <span className="underline underline-offset-8 decoration-line group-hover:decoration-accent transition-colors duration-200">
+              Selected work
+            </span>
+            <span aria-hidden="true" className="text-accent transition-transform duration-200 group-hover:translate-x-1">
+              →
+            </span>
           </a>
-        </AnimatedContent>
+        </Reveal>
       </div>
     </section>
   );

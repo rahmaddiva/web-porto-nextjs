@@ -33,8 +33,7 @@ const socialItems = [
 
 interface SiteContextType {
   theme: "dark" | "light";
-  toggleTheme: () => void;
-  dateTime: string;
+  toggleTheme: (origin?: { x: number; y: number }) => void;
   handleNavClick: (e: React.MouseEvent, href: string) => void;
   menuItems: typeof menuItems;
   socialItems: typeof socialItems;
@@ -43,120 +42,81 @@ interface SiteContextType {
 const SiteContext = createContext<SiteContextType | null>(null);
 
 export function SiteProvider({ children }: { children: ReactNode }) {
-  const [dateTime, setDateTime] = useState("");
+  // "dark" matches SSR output; post-hydration effect syncs from
+  // the pre-paint script's data-theme (avoids hydration mismatch).
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const mountedRef = useRef(false);
   const smootherRef = useRef<any>(null);
 
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const datePart = now.toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      });
-      const timePart = now.toLocaleTimeString("en-GB", { hour12: false });
-      setDateTime(`${datePart} ${timePart}`);
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      smootherRef.current = ScrollSmoother.create({
-        wrapper: "#smooth-wrapper",
-        content: "#smooth-content",
-        smooth: 1.2,
-        effects: true,
-      });
-    }
+    smootherRef.current = ScrollSmoother.create({
+      wrapper: "#smooth-wrapper",
+      content: "#smooth-content",
+      smooth: 1.2,
+      effects: true,
+    });
     return () => {
-      if (smootherRef.current) {
-        try {
-          smootherRef.current.kill();
-        } catch (e) {}
-      }
+      try {
+        smootherRef.current?.kill();
+      } catch {}
     };
   }, []);
 
+  // Persist runs first so its mount commit skips (mountedRef unset);
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const stored = localStorage.getItem("theme");
-    if (stored === "light" || stored === "dark") {
-      setTheme(stored as "dark" | "light");
-      return;
-    }
-    if (
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: light)").matches
-    ) {
-      setTheme("light");
-    }
+    if (!mountedRef.current) return;
+    localStorage.setItem("theme", theme);
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+  useEffect(() => {
+    const t = document.documentElement.getAttribute("data-theme");
+    if (t === "light" || t === "dark") setTheme(t);
+    mountedRef.current = true;
   }, []);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    localStorage.setItem("theme", theme);
-    try {
-      document.documentElement.setAttribute("data-theme", theme);
-    } catch (e) {}
-
-    const targetBg = theme === "light" ? "#ffffff" : "#0a0a0a";
-    const targetFg = theme === "light" ? "#0f1724" : "#ededed";
-
-    try {
-      gsap.to(document.documentElement, {
-        duration: 0.5,
-        ease: "power2.out",
-        css: {
-          "--background": targetBg,
-          "--foreground": targetFg,
-        },
-      });
-    } catch (e) {
-      try {
-        document.documentElement.style.setProperty("--background", targetBg);
-        document.documentElement.style.setProperty("--foreground", targetFg);
-      } catch (err) {}
+  // Circular reveal from the toggle button; falls back to the
+  // plain CSS color cross-fade when View Transitions are unsupported.
+  const toggleTheme = useCallback((origin?: { x: number; y: number }) => {
+    const apply = () =>
+      setTheme((t) => (t === "dark" ? "light" : "dark"));
+    if (origin && document.startViewTransition) {
+      const { x, y } = origin;
+      const r = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
+      );
+      const root = document.documentElement;
+      root.style.setProperty("--vt-x", `${x}px`);
+      root.style.setProperty("--vt-y", `${y}px`);
+      root.style.setProperty("--vt-r", `${r}px`);
+      document.startViewTransition(apply);
+    } else {
+      apply();
     }
-  }, [theme]);
-
-  const toggleTheme = useCallback(
-    () => setTheme((t) => (t === "dark" ? "light" : "dark")),
-    []
-  );
+  }, []);
 
   const handleNavClick = useCallback(
     (e: React.MouseEvent, href: string) => {
       e.preventDefault();
       const target = document.querySelector(href);
       if (!target) return;
-      if (
-        smootherRef.current &&
-        typeof smootherRef.current.scrollTo === "function"
-      ) {
+      if (smootherRef.current) {
         try {
           smootherRef.current.scrollTo(target, true);
-        } catch (err) {
-          target.scrollIntoView({ behavior: "smooth" });
-        }
-      } else {
-        target.scrollIntoView({ behavior: "smooth" });
+          return;
+        } catch {}
       }
+      target.scrollIntoView({ behavior: "smooth" });
     },
     []
   );
 
   return (
     <SiteContext.Provider
-      value={{ theme, toggleTheme, dateTime, handleNavClick, menuItems, socialItems }}
+      value={{ theme, toggleTheme, handleNavClick, menuItems, socialItems }}
     >
-      <div
-        id="smooth-wrapper"
-        className="min-h-screen bg-black text-white flex flex-col relative"
-      >
+      <div id="smooth-wrapper" className="min-h-screen bg-bg text-fg flex flex-col relative">
         {children}
       </div>
     </SiteContext.Provider>

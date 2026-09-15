@@ -9,8 +9,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        bg: "rgb(var(--bg) / <alpha-value>)",
+        fg: "rgb(var(--fg) / <alpha-value>)",
+        muted: "rgb(var(--muted) / <alpha-value>)",
+        line: "rgb(var(--line) / var(--line-alpha, 1))",
+        card: "rgb(var(--card) / var(--card-alpha, 1))",
+        accent: "rgb(var(--accent) / <alpha-value>)",
+        "accent-fg": "rgb(var(--accent-fg) / <alpha-value>)",
       },
     },
   },

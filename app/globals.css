@@ -1,181 +1,89 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Poppins:wght@400;600;700;900&display=swap");
-
-@import url("https://fonts.googleapis.com/css2?family=Oxanium:wght@200..800&display=swap");
-
-/* Tambahkan font-family ke utility Tailwind custom jika belum ada */
-.font-montserrat {
-  font-family: "Montserrat", Arial, Helvetica, sans-serif;
-}
-.font-poppins {
-  font-family: "Poppins", Arial, Helvetica, sans-serif;
-}
-
-.font-oxanium {
-  font-family: "Oxanium", Arial, Helvetica, sans-serif;
-}
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ── Design tokens ──────────────────────────────────────────────
+   Dark is the default; [data-theme="light"] overrides.
+   Components use semantic classes (bg-bg, text-fg, border-line, …)
+   so light mode needs zero per-component overrides. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: 10 10 10;
+  --fg: 237 237 237;
+  --muted: 157 157 168;
+  --line: 255 255 255;
+  --line-alpha: 0.12;
+  --card: 255 255 255;
+  --card-alpha: 0.04;
+  --accent: 91 140 255;
+  --accent-fg: 255 255 255;
+  color-scheme: dark;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+[data-theme="light"] {
+  --bg: 250 250 250;
+  --fg: 17 17 19;
+  --muted: 107 107 118;
+  --line: 0 0 0;
+  --line-alpha: 0.12;
+  --card: 255 255 255;
+  --card-alpha: 1;
+  --accent: 37 99 235;
+  --accent-fg: 255 255 255;
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: rgb(var(--bg));
+  color: rgb(var(--fg));
+  font-family: "Archivo", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.font-display {
+  font-family: "Space Grotesk", "Archivo", sans-serif;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* Smooth theme transition — every themed surface cross-fades. */
+@media (prefers-reduced-motion: no-preference) {
+  *,
+  *::before,
+  *::after {
+    transition:
+      background-color 0.45s ease,
+      border-color 0.45s ease,
+      color 0.45s ease,
+      fill 0.45s ease,
+      stroke 0.45s ease;
   }
 }
 
-/* Theme overrides for light mode: these override common dark utility classes */
-[data-theme="light"] {
-  --background: #ffffff;
-  --foreground: #0f1724;
-  --muted: #6b7280;
-  --muted-2: #e6eef6;
+/* Circular reveal when the browser supports View Transitions
+   (SiteContext passes click coordinates via CSS vars). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
-
-[data-theme="light"] .bg-black {
-  background-color: var(--background) !important;
+::view-transition-new(root) {
+  animation: reveal 0.55s ease-in-out;
+  z-index: 1;
 }
-[data-theme="light"] .bg-black\/60 {
-  background-color: rgba(0, 0, 0, 0.06) !important;
-}
-[data-theme="light"] .bg-black\/75 {
-  background-color: rgba(0, 0, 0, 0.08) !important;
-}
-[data-theme="light"] .bg-black\/90 {
-  background-color: rgba(0, 0, 0, 0.1) !important;
-}
-[data-theme="light"] .hover\:bg-black\/40:hover {
-  background-color: rgba(0, 0, 0, 0.04) !important;
-}
-
-[data-theme="light"] .text-white {
-  color: var(--foreground) !important;
-}
-
-[data-theme="light"] .border-white,
-[data-theme="light"] .border-white\/6,
-[data-theme="light"] .border-white\/30,
-[data-theme="light"] .border-white\/40 {
-  border-color: rgba(15, 23, 36, 0.06) !important;
-}
-
-[data-theme="light"] .bg-\[\#18181b\] {
-  background-color: #f8fafc !important;
-}
-
-[data-theme="light"] .bg-white\/10 {
-  background-color: rgba(0, 0, 0, 0.06) !important;
-}
-
-[data-theme="light"] .fill-white {
-  fill: var(--foreground) !important;
-}
-
-[data-theme="light"] .text-gray-300 {
-  color: #374151 !important;
-}
-
-[data-theme="light"] .text-gray-100 {
-  color: var(--foreground) !important;
-}
-
-[data-theme="light"] .text-gray-400 {
-  color: #9ca3af !important;
-}
-
-[data-theme="light"] .hover\:text-lime-400:hover {
-  color: #84cc16 !important;
-}
-
-/* Smooth theme transitions */
-html,
-body,
-.fill-white,
-.text-white,
-.bg-black,
-.bg-\[\#18181b\],
-.border-white,
-.border-white\/6,
-.border-white\/30,
-.border-white\/40 {
-  transition: background-color 0.38s ease, color 0.38s ease,
-    border-color 0.38s ease, fill 0.38s ease;
-}
-
-/* Experience Timeline Animations */
-.exp-card {
-  will-change: transform, opacity;
-}
-
-.exp-card .group:hover {
-  transform: translateY(-4px);
-}
-
-/* Timeline dot pulse animation */
-@keyframes timeline-pulse {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgba(163, 230, 53, 0.4);
+@keyframes reveal {
+  from {
+    clip-path: circle(0px at var(--vt-x, 50%) var(--vt-y, 50%));
   }
-  50% {
-    box-shadow: 0 0 0 10px rgba(163, 230, 53, 0);
+  to {
+    clip-path: circle(var(--vt-r, 150vmax) at var(--vt-x, 50%) var(--vt-y, 50%));
   }
 }
 
-.exp-card:hover > div:first-child {
-  animation: timeline-pulse 1.5s ease-in-out infinite;
-}
 
-/* Gradient text for highlights */
-.gradient-text {
-  background: linear-gradient(135deg, #a3e635 0%, #22d3ee 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Glass morphism effect enhancement */
-.glass-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-/* Light mode overrides for experience section */
-[data-theme="light"] .exp-card .bg-gradient-to-br {
-  background: linear-gradient(
-    to bottom right,
-    rgba(0, 0, 0, 0.02),
-    rgba(0, 0, 0, 0.01)
-  ) !important;
-}
-
-[data-theme="light"] .exp-card .border-white\/10 {
-  border-color: rgba(0, 0, 0, 0.08) !important;
-}
-
-[data-theme="light"] .exp-card .bg-white\/5 {
-  background-color: rgba(0, 0, 0, 0.03) !important;
-}
-
-[data-theme="light"] .from-lime-400\/5 {
-  --tw-gradient-from: rgba(163, 230, 53, 0.08) !important;
+::selection {
+  background: rgb(var(--accent));
+  color: rgb(var(--accent-fg));
 }

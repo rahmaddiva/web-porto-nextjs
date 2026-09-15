@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { SiteProvider } from "./context/SiteContext";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import FakeClients from "./component/FakeClients";
+import AsciiBackground from "./component/AsciiBackground";
 
 const Navbar = dynamic(() => import("./sections/Navbar"));
 const HeroSection = dynamic(() => import("./sections/HeroSection"));
@@ -15,24 +16,14 @@ const FooterSection = dynamic(() => import("./sections/FooterSection"));
 export default function ClientShell() {
   return (
     <SiteProvider>
+      <AsciiBackground />
       <Navbar />
-      <div id="smooth-content">
+      <div id="smooth-content" className="relative z-10">
         <HeroSection />
-        <br />
-        <div className="w-full mt-11 flex justify-center">
-          <div className="h-px w-full max-w-4xl bg-white/10 my-0" />
-        </div>
         <AboutSection />
         <FakeClients />
         <ExperienceSection />
-        <div className="w-full flex justify-center">
-          <div className="h-px w-full max-w-4xl bg-white/10 my-0" />
-        </div>
         <ProjectSection />
-        <br />
-        <div className="w-full mt-11 flex justify-center">
-          <div className="h-px w-full max-w-4xl bg-white/10 my-0" />
-        </div>
         <ContactSection />
         <FooterSection />
         <SpeedInsights />
