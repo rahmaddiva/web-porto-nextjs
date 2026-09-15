@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Press+Start+2P&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -82,8 +82,105 @@ body {
   }
 }
 
-
 ::selection {
   background: rgb(var(--accent));
   color: rgb(var(--accent-fg));
+}
+
+/* ── 1-bit dither mode ───────────────────────────────────────────
+   Pure black/white tokens, pixel display font, harsh grayscale
+   images, and a heavy checkerboard wash — full 1-bit feel. */
+[data-dither="on"] {
+  --bg: 0 0 0;
+  --fg: 255 255 255;
+  --muted: 255 255 255;
+  --line: 255 255 255;
+  --line-alpha: 0.5;
+  --card: 255 255 255;
+  --card-alpha: 0.1;
+  --accent: 255 255 255;
+  --accent-fg: 0 0 0;
+}
+
+/* Light + dither: invert to white paper, black ink. */
+[data-theme="light"][data-dither="on"] {
+  --bg: 255 255 255;
+  --fg: 0 0 0;
+  --muted: 0 0 0;
+  --line: 0 0 0;
+  --line-alpha: 0.5;
+  --card: 0 0 0;
+  --card-alpha: 0.06;
+  --accent: 0 0 0;
+  --accent-fg: 255 255 255;
+}
+
+/* Pixel display font: headings, section labels, navbar brand. */
+[data-dither="on"] h1,
+[data-dither="on"] h2,
+[data-dither="on"] h3,
+[data-dither="on"] .font-display {
+  font-family: "Press Start 2P", monospace !important;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.6;
+  font-size: clamp(1rem, 3.2vw, 2.25rem);
+}
+
+/* Quotes sit in narrow columns — pixel font must stay small. */
+[data-dither="on"] blockquote.font-display,
+[data-dither="on"] #clients blockquote {
+  font-size: 0.72rem;
+  line-height: 2;
+}
+
+/* Year/meta columns need more room for pixel glyphs. */
+[data-dither="on"] .font-display.text-sm,
+[data-dither="on"] .tabular-nums {
+  font-size: 0.6rem;
+}
+
+/* Captions are small — keep pixel font but tiny. */
+[data-dither="on"] figcaption {
+  font-size: 0.55rem;
+  line-height: 1.8;
+}
+
+/* Body copy: terminal mono so the whole page reads 1-bit. */
+[data-dither="on"] body,
+[data-dither="on"] p,
+[data-dither="on"] a,
+[data-dither="on"] li,
+[data-dither="on"] figcaption,
+[data-dither="on"] span,
+[data-dither="on"] button {
+  font-family: ui-monospace, "Courier New", monospace !important;
+}
+
+[data-dither="on"] img {
+  filter: grayscale(1) contrast(2) brightness(1);
+  image-rendering: pixelated;
+}
+
+/* Fixed checkerboard wash, heavier for a clear 1-bit read. */
+.dither-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  display: none;
+}
+[data-dither="on"] .dither-overlay {
+  display: block;
+  background-image: repeating-conic-gradient(
+    rgba(255, 255, 255, 0.18) 0% 25%,
+    transparent 0% 50%
+  );
+  background-size: 4px 4px;
+}
+[data-theme="light"][data-dither="on"] .dither-overlay {
+  background-image: repeating-conic-gradient(
+    rgba(0, 0, 0, 0.18) 0% 25%,
+    transparent 0% 50%
+  );
 }

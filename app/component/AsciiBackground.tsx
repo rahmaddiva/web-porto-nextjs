@@ -71,7 +71,10 @@ export default function AsciiBackground() {
     readColor();
     resize();
     const observer = new MutationObserver(readColor);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme", "data-dither"],
+    });
     window.addEventListener("resize", resize);
     let timer: number | undefined;
     if (!reduced) timer = window.setInterval(tick, TICK_MS);

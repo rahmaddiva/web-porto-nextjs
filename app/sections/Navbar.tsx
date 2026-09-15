@@ -3,8 +3,9 @@ import { useState } from "react";
 import { useSite } from "../context/SiteContext";
 
 export default function Navbar() {
-  const { theme, toggleTheme, handleNavClick, menuItems } = useSite();
+  const { theme, toggleTheme, dither, toggleDither, handleNavClick, menuItems } = useSite();
   const [navOpen, setNavOpen] = useState(false);
+  const toggleDitherFromEvent = (e: React.MouseEvent) => toggleDither({ x: e.clientX, y: e.clientY });
 
   const toggleFromEvent = (e: React.MouseEvent) => toggleTheme({ x: e.clientX, y: e.clientY });
 
@@ -34,10 +35,12 @@ export default function Navbar() {
               {item.label}
             </a>
           ))}
+          <DitherButton on={dither} onClick={toggleDitherFromEvent} />
           <ThemeButton onClick={toggleFromEvent} theme={theme} />
         </div>
 
         <div className="md:hidden flex items-center gap-2">
+          <DitherButton on={dither} onClick={toggleDitherFromEvent} />
           <ThemeButton onClick={toggleFromEvent} theme={theme} />
           <button
             className="p-2.5 text-fg"
@@ -110,6 +113,35 @@ function ThemeButton({ theme, onClick }: { theme: "dark" | "light"; onClick: (e:
           />
         </svg>
       )}
+    </button>
+  );
+}
+
+function DitherButton({ on, onClick }: { on: boolean; onClick: (e: React.MouseEvent) => void }) {
+  return (
+    <button
+      onClick={onClick}
+      aria-label="Toggle 1-bit dither mode"
+      aria-pressed={on}
+      className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-200 ${
+        on ? "text-accent" : "text-muted hover:text-fg"
+      }`}
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+        {/* 2x2 checker: filled squares depend on state */}
+        <rect width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.2" />
+        {on ? (
+          <>
+            <rect x="1.5" y="1.5" width="5.5" height="5.5" fill="currentColor" />
+            <rect x="9" y="9" width="5.5" height="5.5" fill="currentColor" />
+          </>
+        ) : (
+          <>
+            <rect x="1.5" y="1.5" width="5.5" height="5.5" fill="none" stroke="currentColor" strokeWidth="0.8" />
+            <rect x="9" y="9" width="5.5" height="5.5" fill="none" stroke="currentColor" strokeWidth="0.8" />
+          </>
+        )}
+      </svg>
     </button>
   );
 }

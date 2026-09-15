@@ -18,14 +18,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Pre-paint theme: prevents dark/light flash before React hydrates. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark"){t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"}document.documentElement.setAttribute("data-theme",t)}catch(e){}})()`,
+            __html: `(function(){try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark"){t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"}document.documentElement.setAttribute("data-theme",t);document.documentElement.setAttribute("data-dither",localStorage.getItem("dither")==="on"?"on":"off")}catch(e){}})()`,
           }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <div className="dither-overlay" aria-hidden="true" />
+        {children}
+      </body>
     </html>
   );
 }
